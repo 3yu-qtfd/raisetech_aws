@@ -20,7 +20,7 @@
 ### 2.今回起動したDBサーバー
 - サーバー名: MySQL（バージョン8.4.4）
 [mysql](images/mysql.png)
-[mysql](images/mysql_2.png)
+[mysql-2](images/mysql_2.png)
 
 - DBサーバーの開始・終了時
   - 開始時: Webブラウザからアプリへアクセス可能
