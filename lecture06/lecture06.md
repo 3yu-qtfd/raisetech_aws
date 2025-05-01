@@ -44,7 +44,7 @@
   - EC2は週に30時間、RDSは毎日起動し停止しない前提とする
 
 - 見積もりURL
-https://calculator.aws/#/estimate?id=23ac863377e34d1d1e7dce23cb12069c0735efb1
+https://calculator.aws/#/estimate?id=ab14d3f7b1c46cab737077e23bba002da94881da
 
 #### 現在の利用料
 - 先月のEC2の利用料: 9.13$
