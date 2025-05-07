@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create RDS
+
+Parameters: 
+#-------------------------------------------------------------------
+# Base Name
+#-------------------------------------------------------------------
+  Namebase:
+    Type: String
+    Default: "cfn-deploy"
+
+Resources:
+#-------------------------------------------------------------------
+# RDS Instance
+#-------------------------------------------------------------------
+#RDS Instance
+  RDS:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 20
+      DBInstanceClass: db.t4g.micro
+      AutoMinorVersionUpgrade: false
+      AvailabilityZone:  !Select
+        - 1
+        - Fn::GetAZs: !Ref "AWS::Region"
+      DBInstanceIdentifier: !Sub "${Namebase}-rds"
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      Engine: mysql
+      EngineVersion: 8.0.40
+      LicenseModel: general-public-license
+      MasterUsername: admin
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${RDSSecret}:SecretString:password}}'
+      MultiAZ: false
+      Port: 3306
+      PubliclyAccessible: false
+      StorageEncrypted: true
+      StorageType: gp2
+      VPCSecurityGroups:
+        - !ImportValue SecGroupRDS
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#-------------------------------------------------------------------
+# RDS Password
+#-------------------------------------------------------------------
+#RDS Password
+  RDSSecret:
+    Type: "AWS::SecretsManager::Secret"
+    Properties:
+      Description: "RDS password for my RDS instance"
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "admin"}'
+        GenerateStringKey: "password"
+        PasswordLength: 16
+        ExcludeCharacters: '"@/\'
+
+#-------------------------------------------------------------------
+# DB Subnet Group
+#-------------------------------------------------------------------
+#DB Subnet Group
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties: 
+      DBSubnetGroupDescription: Private Subnet Group for RDS
+      DBSubnetGroupName: !Sub "${Namebase}-subnet-rds"
+      SubnetIds: 
+        - !ImportValue PrivateSubnet1a
+        - !ImportValue PrivateSubnet1c
+      Tags: 
+        - Key: Name
+          Value: !Sub "${Namebase}"

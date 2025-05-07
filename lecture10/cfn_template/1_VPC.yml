@@ -1,0 +1,191 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create VPC
+
+Parameters: 
+#-------------------------------------------------------------------
+# Base Name
+#-------------------------------------------------------------------
+  Namebase:
+    Type: String
+    Default: "cfn-deploy"
+
+Resources: 
+#-------------------------------------------------------------------
+# VPC
+#-------------------------------------------------------------------
+#VPC
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 200.0.0.0/24
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#-------------------------------------------------------------------
+# Internet Gateway
+#-------------------------------------------------------------------
+#Internet Gateway
+  InternetGateway: 
+    Type: AWS::EC2::InternetGateway
+    Properties: 
+      Tags: 
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+  InternetGatewayAttachment: 
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties: 
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+#-------------------------------------------------------------------
+# Subnet
+#-------------------------------------------------------------------
+#Public Subnet 1a
+  PublicSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select
+        - 0
+        - Fn::GetAZs: !Ref "AWS::Region"
+      VpcId: !Ref VPC
+      CidrBlock: 200.0.0.16/28
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#Public Subnet 1c
+  PublicSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:  !Select
+        - 1
+        - Fn::GetAZs: !Ref "AWS::Region"
+      VpcId: !Ref VPC
+      CidrBlock: 200.0.0.32/28
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#Private Subnet 1a
+  PrivateSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:  !Select
+        - 0
+        - Fn::GetAZs: !Ref "AWS::Region"
+      VpcId: !Ref VPC
+      CidrBlock: 200.0.0.48/28
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#Private Subnet 1c
+  PrivateSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:  !Select
+        - 1
+        - Fn::GetAZs: !Ref "AWS::Region"
+      VpcId: !Ref VPC
+      CidrBlock: 200.0.0.64 /28
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#-------------------------------------------------------------------
+# Route Table, Rouing
+#-------------------------------------------------------------------
+#Public Route Table
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#Public Routing
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+#Private Route Table
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#-------------------------------------------------------------------
+# Route Association
+#-------------------------------------------------------------------
+#Public Route Association 1a
+  PublicRouteAssoc1a:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1a
+      RouteTableId: !Ref PublicRouteTable
+
+#Public Route Association 1c
+  PublicRouteAssoc1c:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1c
+      RouteTableId: !Ref PublicRouteTable
+
+#Private Route Association 1a
+  PrivateRouteAssoc1a:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1a
+      RouteTableId: !Ref PrivateRouteTable
+
+#Private Route Association 1c
+  PrivateRouteAssoc1c:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1c
+      RouteTableId: !Ref PrivateRouteTable
+
+Outputs:
+#-------------------------------------------------------------------
+# Outputs
+#-------------------------------------------------------------------
+#VPC
+  VPC:
+    Value: !Ref VPC
+    Export: 
+      Name: VPC
+
+#Public Subnet 1a
+  PublicSubnet1a:
+    Value: !Ref PublicSubnet1a
+    Export: 
+      Name: PublicSubnet1a
+
+#Public Subnet 1c
+  PublicSubnet1c:
+    Value: !Ref PublicSubnet1c
+    Export: 
+      Name: PublicSubnet1c
+
+#Private Subnet 1a
+  PrivateSubnet1a:
+    Value: !Ref PrivateSubnet1a
+    Export: 
+      Name: PrivateSubnet1a
+
+#Private Subnet 1c
+  PrivateSubnet1c:
+    Value: !Ref PrivateSubnet1c
+    Export: 
+      Name: PrivateSubnet1c

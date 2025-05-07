@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create ALB
+
+Parameters: 
+#-------------------------------------------------------------------
+# Base Name
+#-------------------------------------------------------------------
+  Namebase:
+    Type: String
+    Default: "cfn-deploy"
+
+Resources: 
+#-------------------------------------------------------------------
+# Application Load Balancer
+#-------------------------------------------------------------------
+#ALB
+  ALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties: 
+      Name: !Sub "${Namebase}-alb"
+      Type: application
+      Scheme: internet-facing
+      SecurityGroups: 
+        - !ImportValue SecGroupALB
+      Subnets:
+        - !ImportValue PublicSubnet1a
+        - !ImportValue PublicSubnet1c
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#-------------------------------------------------------------------
+# Listener
+#-------------------------------------------------------------------      
+#Listener
+  Listener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      DefaultActions: 
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+      Port: 80
+      Protocol: HTTP
+
+#-------------------------------------------------------------------
+# Target Group
+#------------------------------------------------------------------- 
+#Target Group
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties: 
+      Name: !Sub "${Namebase}-alb-tgp"
+      VpcId: !ImportValue VPC
+      TargetType: instance
+      Targets: 
+        - Id: !ImportValue EC2
+      Port: 80
+      Protocol: HTTP
+      ProtocolVersion: HTTP1
+      HealthCheckEnabled: yes
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: /
+      HealthCheckPort: 80
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 2
+      Tags: 
+        - Key: Name
+          Value: !Sub "${Namebase}"
