@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create EC2 
+
+Parameters: 
+#-------------------------------------------------------------------
+# Base Name
+#-------------------------------------------------------------------
+  Namebase:
+    Type: String
+    Default: "cfn-deploy"
+
+Resources:
+#-------------------------------------------------------------------
+# EC2 Instance
+#-------------------------------------------------------------------
+#EC2 Instance
+  EC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: !Ref KeyPair
+      DisableApiTermination: false
+      ImageId: ami-084614baa32efe9f2  #Amazon Linux2 (as of 2025/4/25)
+      InstanceType: t2.micro
+      Monitoring: true
+      AvailabilityZone: !Select
+        - 0
+        - Fn::GetAZs: !Ref "AWS::Region"
+      SubnetId: !ImportValue PublicSubnet1a
+      SecurityGroupIds:
+        - !ImportValue SecGroupEC2
+      IamInstanceProfile: !Ref InstanceProfile  
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#-------------------------------------------------------------------
+# Instance Profile, Key Pair
+#-------------------------------------------------------------------
+#Instance Profile
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !ImportValue RoleEC2toS3
+
+#Key Pair
+  KeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: EC2KeyPair
+      KeyType: rsa
+
+#-------------------------------------------------------------------
+# Elastic IP Address
+#-------------------------------------------------------------------
+#Elastic IP Address
+  ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  ElasticIPAssociate:
+    Type: AWS::EC2::EIPAssociation
+    Properties: 
+      AllocationId: !GetAtt ElasticIP.AllocationId
+      InstanceId: !Ref EC2
+
+Outputs:
+#-------------------------------------------------------------------
+# Outputs
+#-------------------------------------------------------------------
+#EC2
+  EC2:
+    Value: !Ref EC2
+    Export: 
+      Name: EC2
