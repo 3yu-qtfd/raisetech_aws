@@ -14,7 +14,7 @@ Resources:
 # RDS Instance
 #-------------------------------------------------------------------
 #RDS Instance
-  RDS:
+  RDSInstance:
     Type: AWS::RDS::DBInstance
     Properties:
       AllocatedStorage: 20

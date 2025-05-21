@@ -14,7 +14,7 @@ Resources:
 # EC2 Instance
 #-------------------------------------------------------------------
 #EC2 Instance
-  EC2:
+  EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       KeyName: !Ref KeyPair
@@ -63,14 +63,14 @@ Resources:
     Type: AWS::EC2::EIPAssociation
     Properties: 
       AllocationId: !GetAtt ElasticIP.AllocationId
-      InstanceId: !Ref EC2
+      InstanceId: !Ref EC2Instance
 
 Outputs:
 #-------------------------------------------------------------------
 # Outputs
 #-------------------------------------------------------------------
 #EC2
-  EC2:
-    Value: !Ref EC2
+  EC2Instance:
+    Value: !Ref EC2Instance
     Export: 
-      Name: EC2
+      Name: EC2Instance

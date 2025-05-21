@@ -9,7 +9,7 @@ Parameters:
     Type: String
     Default: "cfn-deploy"
 
-Resources: 
+Resources:
 #-------------------------------------------------------------------
 # EC2 Security Group
 #-------------------------------------------------------------------
@@ -19,7 +19,7 @@ Resources:
     Properties:
       GroupName: !Sub "${Namebase}-secgroup-ec2"
       GroupDescription: Security Group for EC2
-      VpcId: !ImportValue VPC
+      VpcId: !ImportValue VPCNetwork
       Tags:
         - Key: Name
           Value: !Sub "${Namebase}"
@@ -32,7 +32,7 @@ Resources:
       IpProtocol: tcp
       FromPort: 22
       ToPort: 22
-      CidrIp: 160.237.74.49/32
+      CidrIp: 0.0.0.0/0
 
 #Ingress Rule 2
   SecGroupEC2Ingress2:
@@ -83,7 +83,7 @@ Resources:
     Properties:
       GroupName: !Sub "${Namebase}-secgroup-alb"
       GroupDescription: Security Group for ALB
-      VpcId: !ImportValue VPC
+      VpcId: !ImportValue VPCNetwork
       Tags:
         - Key: Name
           Value: !Sub "${Namebase}"
@@ -117,7 +117,7 @@ Resources:
     Properties:
       GroupName: !Sub "${Namebase}-secgroup-rds"
       GroupDescription: Security Group for RDS
-      VpcId: !ImportValue VPC
+      VpcId: !ImportValue VPCNetwork
       Tags:
         - Key: Name
           Value: !Sub "${Namebase}"

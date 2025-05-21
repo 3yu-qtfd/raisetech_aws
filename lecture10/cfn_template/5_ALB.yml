@@ -13,7 +13,7 @@ Resources:
 #-------------------------------------------------------------------
 # Application Load Balancer
 #-------------------------------------------------------------------
-#ALB
+#Application Load Balancer
   ALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties: 
@@ -51,10 +51,10 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties: 
       Name: !Sub "${Namebase}-alb-tgp"
-      VpcId: !ImportValue VPC
+      VpcId: !ImportValue VPCNetwork
       TargetType: instance
       Targets: 
-        - Id: !ImportValue EC2
+        - Id: !ImportValue EC2Instance
       Port: 80
       Protocol: HTTP
       ProtocolVersion: HTTP1
