@@ -1,13 +1,19 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Create SecurityGroup 
 
-Parameters: 
+Parameters:
 #-------------------------------------------------------------------
-# Base Name
+# Base Name, etc
 #-------------------------------------------------------------------
+#Namebase for all resources
   Namebase:
     Type: String
     Default: "cfn-deploy"
+
+#My IP address
+  MyIP: 
+    Type: String
+    Description: My local PC's changing IP address
 
 Resources:
 #-------------------------------------------------------------------
@@ -32,7 +38,7 @@ Resources:
       IpProtocol: tcp
       FromPort: 22
       ToPort: 22
-      CidrIp: 0.0.0.0/0
+      CidrIp: !Sub "${MyIP}/32"
 
 #Ingress Rule 2
   SecGroupEC2Ingress2:
