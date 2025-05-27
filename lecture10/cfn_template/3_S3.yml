@@ -80,14 +80,8 @@ Outputs:
 #-------------------------------------------------------------------
 # Outputs
 #-------------------------------------------------------------------
-#S3 Bucket
-  S3Bucket:
-    Value: !Ref S3Bucket
-    Export: 
-      Name: S3Bucket
-
 #IAM Role
   RoleEC2toS3:
     Value: !Ref RoleEC2toS3
     Export:
-      Name: RoleEC2toS3
+      Name: RoleEC2toS3-RoleName

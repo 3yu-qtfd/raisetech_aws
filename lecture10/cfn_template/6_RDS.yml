@@ -36,7 +36,7 @@ Resources:
       StorageEncrypted: true
       StorageType: gp2
       VPCSecurityGroups:
-        - !ImportValue SecGroupRDS
+        - !ImportValue SecGroupRDS-GroupID
       Tags:
         - Key: Name
           Value: !Sub "${Namebase}"
@@ -65,8 +65,8 @@ Resources:
       DBSubnetGroupDescription: Private Subnet Group for RDS
       DBSubnetGroupName: !Sub "${Namebase}-subnet-rds"
       SubnetIds: 
-        - !ImportValue PrivateSubnet1a
-        - !ImportValue PrivateSubnet1c
+        - !ImportValue PrivateSubnet1a-SubnetID
+        - !ImportValue PrivateSubnet1c-SubnetID
       Tags: 
         - Key: Name
           Value: !Sub "${Namebase}"

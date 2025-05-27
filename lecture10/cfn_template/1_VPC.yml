@@ -164,28 +164,28 @@ Outputs:
   VPCNetwork:
     Value: !Ref VPCNetwork
     Export: 
-      Name: VPCNetwork
+      Name: VPCNetworkID
 
 #Public Subnet 1a
   PublicSubnet1a:
     Value: !Ref PublicSubnet1a
     Export: 
-      Name: PublicSubnet1a
+      Name: PublicSubnet1a-SubnetID
 
 #Public Subnet 1c
   PublicSubnet1c:
     Value: !Ref PublicSubnet1c
     Export: 
-      Name: PublicSubnet1c
+      Name: PublicSubnet1c-SubnetID
 
 #Private Subnet 1a
   PrivateSubnet1a:
     Value: !Ref PrivateSubnet1a
     Export: 
-      Name: PrivateSubnet1a
+      Name: PrivateSubnet1a-SubnetID
 
 #Private Subnet 1c
   PrivateSubnet1c:
     Value: !Ref PrivateSubnet1c
     Export: 
-      Name: PrivateSubnet1c
+      Name: PrivateSubnet1c-SubnetID

@@ -25,7 +25,7 @@ Resources:
     Properties:
       GroupName: !Sub "${Namebase}-secgroup-ec2"
       GroupDescription: Security Group for EC2
-      VpcId: !ImportValue VPCNetwork
+      VpcId: !ImportValue VPCNetworkID
       Tags:
         - Key: Name
           Value: !Sub "${Namebase}"
@@ -34,7 +34,7 @@ Resources:
   SecGroupEC2Ingress1:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      GroupId: !GetAtt SecGroupEC2.GroupId
+      GroupId: !Ref SecGroupEC2
       IpProtocol: tcp
       FromPort: 22
       ToPort: 22
@@ -44,17 +44,17 @@ Resources:
   SecGroupEC2Ingress2:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      GroupId: !GetAtt SecGroupEC2.GroupId
+      GroupId: !Ref SecGroupEC2
       IpProtocol: tcp
       FromPort: 80
       ToPort: 80
-      SourceSecurityGroupId: !GetAtt SecGroupALB.GroupId
+      SourceSecurityGroupId: !Ref SecGroupALB
 
 #Egress Rule 1
   SecGroupEC2Egress1:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
-      GroupId: !GetAtt SecGroupEC2.GroupId
+      GroupId: !Ref SecGroupEC2
       IpProtocol: tcp
       FromPort: 80
       ToPort: 80
@@ -64,7 +64,7 @@ Resources:
   SecGroupEC2Egress2:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
-      GroupId: !GetAtt SecGroupEC2.GroupId
+      GroupId: !Ref SecGroupEC2
       IpProtocol: tcp
       FromPort: 443
       ToPort: 443
@@ -74,11 +74,11 @@ Resources:
   SecGroupEC2Egress3:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
-      GroupId: !GetAtt SecGroupEC2.GroupId
+      GroupId: !Ref SecGroupEC2
       IpProtocol: tcp
       FromPort: 3306
       ToPort: 3306
-      DestinationSecurityGroupId: !GetAtt SecGroupRDS.GroupId
+      DestinationSecurityGroupId: !Ref SecGroupRDS
 
 #-------------------------------------------------------------------
 # ALB Security Group
@@ -89,7 +89,7 @@ Resources:
     Properties:
       GroupName: !Sub "${Namebase}-secgroup-alb"
       GroupDescription: Security Group for ALB
-      VpcId: !ImportValue VPCNetwork
+      VpcId: !ImportValue VPCNetworkID
       Tags:
         - Key: Name
           Value: !Sub "${Namebase}"
@@ -98,7 +98,7 @@ Resources:
   SecGroupALBIngress1:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      GroupId: !GetAtt SecGroupALB.GroupId
+      GroupId: !Ref SecGroupALB
       IpProtocol: tcp
       FromPort: 80
       ToPort: 80
@@ -108,11 +108,11 @@ Resources:
   SecGroupALBEgress1:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
-      GroupId: !GetAtt SecGroupALB.GroupId
+      GroupId: !Ref SecGroupALB
       IpProtocol: tcp
       FromPort: 80
       ToPort: 80
-      DestinationSecurityGroupId: !GetAtt SecGroupEC2.GroupId
+      DestinationSecurityGroupId: !Ref SecGroupEC2
 
 #-------------------------------------------------------------------
 # RDS Security Group
@@ -123,7 +123,7 @@ Resources:
     Properties:
       GroupName: !Sub "${Namebase}-secgroup-rds"
       GroupDescription: Security Group for RDS
-      VpcId: !ImportValue VPCNetwork
+      VpcId: !ImportValue VPCNetworkID
       Tags:
         - Key: Name
           Value: !Sub "${Namebase}"
@@ -132,11 +132,11 @@ Resources:
   SecGroupRDSIngress1:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      GroupId: !GetAtt SecGroupRDS.GroupId
+      GroupId: !Ref SecGroupRDS
       IpProtocol: tcp
       FromPort: 3306
       ToPort: 3306
-      SourceSecurityGroupId: !GetAtt SecGroupEC2.GroupId
+      SourceSecurityGroupId: !Ref SecGroupEC2
 
 Outputs:
 #-------------------------------------------------------------------
@@ -146,16 +146,16 @@ Outputs:
   SecGroupEC2:
     Value: !Ref SecGroupEC2
     Export: 
-      Name: SecGroupEC2
+      Name: SecGroupEC2-GroupID
 
 #ALB Security Group
   SecGroupALB:
     Value: !Ref SecGroupALB
     Export: 
-      Name: SecGroupALB
+      Name: SecGroupALB-GroupID
 
 #ALB Security Group
   SecGroupRDS:
     Value: !Ref SecGroupRDS
     Export: 
-      Name: SecGroupRDS
+      Name: SecGroupRDS-GroupID

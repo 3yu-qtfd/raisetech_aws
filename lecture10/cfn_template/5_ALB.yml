@@ -21,10 +21,10 @@ Resources:
       Type: application
       Scheme: internet-facing
       SecurityGroups: 
-        - !ImportValue SecGroupALB
+        - !ImportValue SecGroupALB-GroupID
       Subnets:
-        - !ImportValue PublicSubnet1a
-        - !ImportValue PublicSubnet1c
+        - !ImportValue PublicSubnet1a-SubnetID
+        - !ImportValue PublicSubnet1c-SubnetID
       Tags:
         - Key: Name
           Value: !Sub "${Namebase}"
@@ -51,10 +51,10 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties: 
       Name: !Sub "${Namebase}-alb-tgp"
-      VpcId: !ImportValue VPCNetwork
+      VpcId: !ImportValue VPCNetworkID
       TargetType: instance
       Targets: 
-        - Id: !ImportValue EC2Instance
+        - Id: !ImportValue EC2InstanceID
       Port: 80
       Protocol: HTTP
       ProtocolVersion: HTTP1

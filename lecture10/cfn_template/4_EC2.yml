@@ -25,9 +25,9 @@ Resources:
       AvailabilityZone: !Select
         - 0
         - Fn::GetAZs: !Ref "AWS::Region"
-      SubnetId: !ImportValue PublicSubnet1a
+      SubnetId: !ImportValue PublicSubnet1a-SubnetID
       SecurityGroupIds:
-        - !ImportValue SecGroupEC2
+        - !ImportValue SecGroupEC2-GroupID
       IamInstanceProfile: !Ref InstanceProfile  
       Tags:
         - Key: Name
@@ -41,7 +41,7 @@ Resources:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Roles:
-        - !ImportValue RoleEC2toS3
+        - !ImportValue RoleEC2toS3-RoleName
 
 #Key Pair
   KeyPair:
@@ -73,4 +73,4 @@ Outputs:
   EC2Instance:
     Value: !Ref EC2Instance
     Export: 
-      Name: EC2Instance
+      Name: EC2InstanceID
