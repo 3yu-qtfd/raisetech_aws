@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create S3
+
+Parameters:
+#-------------------------------------------------------------------
+# Base Name
+#-------------------------------------------------------------------
+  Namebase:
+    Type: String
+    Default: "cfn-deploy"
+
+Resources: 
+#-------------------------------------------------------------------
+# S3 Bucket
+#-------------------------------------------------------------------
+#S3 Bucket
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join
+        - '-'
+        - - !Sub "${Namebase}"
+          - 's3-owner'
+          - !Ref AWS::AccountId
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - BucketKeyEnabled: true
+            ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'aws:kms' 
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags: 
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+#-------------------------------------------------------------------
+# IAM Policy, IAM Role 
+#-------------------------------------------------------------------
+#IAM Policy
+  PolicyEC2toS3:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowS3Access
+            Effect: Allow
+            Action:
+              - 's3:GetObject'
+              - 's3:PutObject'
+              - 's3:DeleteObject'
+              - 's3:ListBucket'
+            Resource:
+              - !Sub 'arn:aws:s3:::${S3Bucket}/*'        
+      
+#IAM Role
+  RoleEC2toS3:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: This IAM role is attached to EC2 and grants access to S3.
+      ManagedPolicyArns:
+        - !Ref PolicyEC2toS3
+      Tags: 
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+Outputs:
+#-------------------------------------------------------------------
+# Outputs
+#-------------------------------------------------------------------
+#IAM Role
+  RoleEC2toS3:
+    Value: !Ref RoleEC2toS3
+    Export:
+      Name: RoleEC2toS3-RoleName
