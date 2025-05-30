@@ -21,5 +21,3 @@
 ![result](images/5_result.png)
 ![result](images/6_result.png)
 ![result](images/7_result.png)
-![result](images/8_result.png)
-
