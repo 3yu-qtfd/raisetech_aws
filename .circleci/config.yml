@@ -19,6 +19,7 @@ jobs:
       - aws-cli/install
       - aws-cli/setup:
           role_arn: arn:aws:iam::713881797072:role/cfn-deploy-OIDC-role
+          profile_name: cfn-deploy-OIDC
           region: ${AWS_REGION}
       - run:
           name: run cfn-deploy
