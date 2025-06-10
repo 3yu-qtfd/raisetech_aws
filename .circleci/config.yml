@@ -19,11 +19,13 @@ jobs:
       - aws-cli/install
       - aws-cli/setup:
           role_arn: arn:aws:iam::713881797072:role/cfn-deploy-OIDC-role
-          role_session_name: cfn-deploy-OIDC
+          profile_name: cfn-deploy-OIDC
+          role_session_name: cfn-deploy-session
           region: ${AWS_REGION}
       - run:
-          name: debug
-          command: aws sts get-caller-identity
+          name: run cfn-deploy
+          command: |
+            aws cloudformation deploy --template-file ./cloudformation/1_VPC.yml --stack-name cfn-deploy-VPC --region ${AWS_REGION} --profile cfn-deploy-OIDC --no-fail-on-empty-changeset
 
 workflows:
   raisetech:
