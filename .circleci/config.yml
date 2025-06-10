@@ -21,16 +21,6 @@ jobs:
           role_arn: arn:aws:iam::713881797072:role/cfn-deploy-OIDC-role
           role_session_name: cfn-deploy-OIDC
           region: ${AWS_REGION}
-      #- run:
-         #name: run cfn-deploy
-         #command: |
-           # aws cloudformation deploy --template-file ./cloudformation/1_VPC.yml --stack-name cfn-deploy-VPC --region ${AWS_REGION}  --no-fail-on-empty-changeset
-           # aws cloudformation deploy --template-file ./cloudformation/2_Sec.yml --stack-name cfn-deploy-Sec --region ${AWS_REGION}  --no-fail-on-empty-changeset 
-           # aws cloudformation deploy --template-file ./cloudformation/3_S3.yml --stack-name cfn-deploy-S3 --region ${AWS_REGION}  --no-fail-on-empty-changeset 
-           # aws cloudformation deploy --template-file ./cloudformation/4_EC2.yml --stack-name cfn-deploy-EC2 --region ${AWS_REGION} --no-fail-on-empty-changeset 
-           # aws cloudformation deploy --template-file ./cloudformation/5_ALB.yml --stack-name cfn-deploy-ALB --region ${AWS_REGION} --no-fail-on-empty-changeset 
-           # aws cloudformation deploy --template-file ./cloudformation/6_RDS.yml --stack-name cfn-deploy-RDS --region ${AWS_REGION} --no-fail-on-empty-changeset 
-   
       - run:
           name: debug
           command: aws sts get-caller-identity
@@ -41,5 +31,3 @@ workflows:
       - cfn-lint
       - cfn-deploy:
           context: AWS
-
-          
