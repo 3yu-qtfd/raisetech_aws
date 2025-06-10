@@ -10,11 +10,6 @@ Parameters:
     Type: String
     Default: "cfn-deploy"
 
-#My IP address
-  MyIP: 
-    Type: String
-    Description: My local PC's changing IP address
-
 Resources:
 #-------------------------------------------------------------------
 # EC2 Security Group
@@ -32,16 +27,6 @@ Resources:
 
 #Ingress Rule 1
   SecGroupEC2Ingress1:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      GroupId: !Ref SecGroupEC2
-      IpProtocol: tcp
-      FromPort: 22
-      ToPort: 22
-      CidrIp: !Sub "${MyIP}/32"
-
-#Ingress Rule 2
-  SecGroupEC2Ingress2:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       GroupId: !Ref SecGroupEC2
