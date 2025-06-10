@@ -41,7 +41,7 @@ Resources:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Roles:
-        - !ImportValue RoleEC2toS3-RoleName
+        - !ImportValue RoleAtacchedToEC2-RoleName
 
 #Key Pair
   KeyPair:

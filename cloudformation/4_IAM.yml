@@ -1,0 +1,108 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create IAM Role and Policies
+
+Parameters:
+#-------------------------------------------------------------------
+# Base Name
+#-------------------------------------------------------------------
+  Namebase:
+    Type: String
+    Default: "cfn-deploy"
+
+Resources: 
+#-------------------------------------------------------------------
+# IAM Policy, IAM Role 
+#-------------------------------------------------------------------
+#IAM Policy 1 (Allow S3 access to EC2)
+  PolicyS3Access:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowS3Access
+            Effect: Allow
+            Action:
+              - 's3:GetObject'
+              - 's3:PutObject'
+              - 's3:DeleteObject'
+              - 's3:ListBucket'
+            Resource:
+              - !ImportValue 'arn:aws:s3:::${S3BucketName}/*'        
+
+#IAM Policy 2 (Enable SSM access)
+  PolicySSMAccess:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowSSMAccess
+            Effect: Allow
+            Action:
+              - 'ssm:DescribeAssociation'
+              - 'ssm:GetDeployablePatchSnapshotForInstance'
+              - 'ssm:GetDocument'
+              - 'ssm:DescribeDocument'
+              - 'ssm:GetManifest'
+              - 'ssm:GetParameter'
+              - 'ssm:GetParameters'
+              - 'ssm:ListAssociations'
+              - 'ssm:ListInstanceAssociations'
+              - 'ssm:PutInventory'
+              - 'ssm:PutComplianceItems'
+              - 'ssm:PutConfigurePackageResult'
+              - 'ssm:UpdateAssociationStatus'
+              - 'ssm:UpdateInstanceAssociationStatus'
+              - 'ssm:UpdateInstanceInformation'
+            Resource:
+              - '*'
+          - Sid: AllowSSMMessaging
+            Effect: Allow
+            Action:
+              - 'ssmmessages:CreateControlChannel'
+              - 'ssmmessages:CreateDataChannel'
+              - 'ssmmessages:OpenControlChannel'
+              - 'ssmmessages:OpenDataChannel'
+            Resource: '*'
+          - Sid: AllowEC2Messaging
+            Effect: Allow
+            Action:
+              - 'ec2messages:AcknowledgeMessage'
+              - 'ec2messages:DeleteMessage'
+              - 'ec2messages:FailMessage'
+              - 'ec2messages:GetEndpoint'
+              - 'ec2messages:GetMessages'
+              - 'ec2messages:SendReply'
+            Resource: '*'
+
+#IAM Role
+  RoleAtacchedToEC2:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: This IAM role is attached to EC2. It gives EC2 access to S3 and enables the use of SSM.
+      ManagedPolicyArns:
+        - !Ref PolicyS3Access
+        - !Ref PolicySSMAccess
+      Tags: 
+        - Key: Name
+          Value: !Sub "${Namebase}"
+
+Outputs:
+#-------------------------------------------------------------------
+# Outputs
+#-------------------------------------------------------------------
+#IAM Role
+  RoleAtacchedToEC2:
+    Value: !Ref RoleAtacchedToEC2
+    Export:
+      Name: RoleAtacchedToEC2-RoleName
