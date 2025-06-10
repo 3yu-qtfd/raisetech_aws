@@ -26,7 +26,7 @@ jobs:
             aws cloudformation deploy --template-file ./cloudformation/1_VPC.yml --stack-name cfn-deploy-VPC --region ${AWS_REGION} --no-fail-on-empty-changeset
             aws cloudformation deploy --template-file ./cloudformation/2_Sec.yml --stack-name cfn-deploy-Sec --region ${AWS_REGION}  --no-fail-on-empty-changeset 
             aws cloudformation deploy --template-file ./cloudformation/3_S3.yml --stack-name cfn-deploy-S3 --region ${AWS_REGION}  --no-fail-on-empty-changeset 
-            aws cloudformation deploy --template-file ./cloudformation/4_IAM.yml --stack-name cfn-deploy-IAM --region ${AWS_REGION} --no-fail-on-empty-changeset 
+            aws cloudformation deploy --template-file ./cloudformation/4_IAM.yml --stack-name cfn-deploy-IAM --region ${AWS_REGION} --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM
             aws cloudformation deploy --template-file ./cloudformation/5_EC2.yml --stack-name cfn-deploy-EC2 --region ${AWS_REGION} --no-fail-on-empty-changeset 
 
 workflows:
