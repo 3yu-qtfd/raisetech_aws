@@ -30,7 +30,7 @@ Resources:
             Resource:
               - !Sub
                 - 'arn:aws:s3:::${BucketName}/*'
-                - BucketName: !ImportValue S3BucketName        
+                - BucketName: !ImportValue S3BucketName #Fetch and insert value      
 
 #IAM Policy 2 (Enable SSM access)
   PolicySSMAccess:
