@@ -47,8 +47,10 @@ Resources:
   KeyPair:
     Type: AWS::EC2::KeyPair
     Properties:
-      KeyName: !Sub "${Namebase}-keypair"
-      KeyType: rsa
+      KeyName: !Sub "${Namebase}-key-pair"
+      Tags:
+        - Key: Name
+          Value: !Sub "${Namebase}"
 
 #-------------------------------------------------------------------
 # Elastic IP Address
