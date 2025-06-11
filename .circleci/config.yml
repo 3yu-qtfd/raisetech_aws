@@ -35,7 +35,6 @@ jobs:
             aws cloudformation deploy --template-file ./cloudformation/5_EC2.yml --stack-name cfn-deploy-EC2 --region ${AWS_REGION} --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM
             aws cloudformation deploy --template-file ./cloudformation/6_ALB.yml --stack-name cfn-deploy-ALB --region ${AWS_REGION} --no-fail-on-empty-changeset 
             aws cloudformation deploy --template-file ./cloudformation/7_RDS.yml --stack-name cfn-deploy-RDS --region ${AWS_REGION} --no-fail-on-empty-changeset
-            
 workflows:
   raisetech:
     jobs:
