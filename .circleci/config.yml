@@ -21,7 +21,7 @@ jobs:
           role_arn: arn:aws:iam::713881797072:role/cfn-deploy-OIDC-role
           region: ${AWS_REGION}
       - run:
-          name: Show OIDC sub claim #debug command
+          name: Show OIDC sub claim #debug
           command: |
             echo "Decode OIDC Token sub claim:"
             echo "$CIRCLE_OIDC_TOKEN" | cut -d '.' -f2 | base64 -d 2>/dev/null | jq '.sub'
