@@ -20,6 +20,12 @@ jobs:
       - aws-cli/setup:
           role_arn: arn:aws:iam::713881797072:role/cfn-deploy-OIDC-role
           region: ${AWS_REGION}
+      - run: #debug
+          name: Show sub claim in OIDC token
+          command: |
+            echo "OIDC Token sub claim:"
+            TOKEN=$(curl -s "$CIRCLE_OIDC_TOKEN")
+            echo $TOKEN | cut -d '.' -f2 | base64 --decode | jq '.sub'
       - run:
           name: run cfn-deploy
           command: |
@@ -29,7 +35,8 @@ jobs:
             aws cloudformation deploy --template-file ./cloudformation/4_IAM.yml --stack-name cfn-deploy-IAM --region ${AWS_REGION} --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM
             aws cloudformation deploy --template-file ./cloudformation/5_EC2.yml --stack-name cfn-deploy-EC2 --region ${AWS_REGION} --no-fail-on-empty-changeset 
             aws cloudformation deploy --template-file ./cloudformation/6_ALB.yml --stack-name cfn-deploy-ALB --region ${AWS_REGION} --no-fail-on-empty-changeset 
-            aws cloudformation deploy --template-file ./cloudformation/7_RDS.yml --stack-name cfn-deploy-RDS --region ${AWS_REGION} --no-fail-on-empty-changeset 
+            aws cloudformation deploy --template-file ./cloudformation/7_RDS.yml --stack-name cfn-deploy-RDS --region ${AWS_REGION} --no-fail-on-empty-changeset
+            
 workflows:
   raisetech:
     jobs:
