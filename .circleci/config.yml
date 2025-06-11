@@ -20,7 +20,7 @@ jobs:
       - aws-cli/setup:
           role_arn: arn:aws:iam::713881797072:role/cfn-deploy-OIDC-role
           region: ${AWS_REGION}
-      - run:
+      - run: #debug
           name: Show OIDC sub claim
           command: |
             echo "Decode OIDC Token sub claim:"
