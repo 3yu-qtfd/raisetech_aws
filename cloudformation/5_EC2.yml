@@ -47,7 +47,7 @@ Resources:
   KeyPair:
     Type: AWS::EC2::KeyPair
     Properties:
-      KeyName: EC2KeyPair
+      KeyName: !Sub "${Namebase}-keypair"
       KeyType: rsa
 
 #-------------------------------------------------------------------
