@@ -1,0 +1,28 @@
+- name: Initial setup
+  hosts: all
+  become: true
+  tasks: 
+    - name: Change the timezone
+      community.general.timezone:
+        name: Asia/Tokyo
+
+    - name: Install package group
+      become: true
+      ansible.builtin.yum:
+        name: '@Development tools'
+        state: present
+
+    - name: Install packages
+      ansible.builtin.yum:
+        name:
+          - git
+          - kernel-headers
+          - bzip2
+          - curl
+          - glibc-devel
+          - libffi-devel
+          - readline-devel
+          - zlib-devel
+          - gdbm-devel
+          - ncurses-devel
+        state: present
