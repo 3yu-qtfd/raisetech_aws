@@ -1,0 +1,5 @@
+- user: ec2-user
+  hosts: all
+  roles:
+    - init
+    - mysql

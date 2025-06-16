@@ -1,0 +1,32 @@
+---
+# tasks file for initial setup
+- name: Change the timezone
+  community.general.timezone:
+    name: Asia/Tokyo
+
+- name: Create a working directory
+  ansible.builtin.file:
+    path: /home/ec2-user/work
+    state: directory
+
+- name: Install a package group
+  become: true
+  ansible.builtin.yum:
+    name: '@Development tools'
+    state: present
+
+- name: Install packages
+  become: true
+  ansible.builtin.yum:
+    name:
+      - git
+      - kernel-headers
+      - bzip2
+      - curl
+      - glibc-devel
+      - libffi-devel
+      - readline-devel
+      - zlib-devel
+      - gdbm-devel
+      - ncurses-devel
+    state: present
