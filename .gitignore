@@ -1,0 +1,17 @@
+# Ansibleのコレクション
+ansible/collections/
+
+# SSH鍵
+*.pem
+*.key
+*.pub
+
+# Pythonのキャッシュ関連
+*.pyc
+__pycache__/
+
+# その他の一時ファイル
+*.log
+*.retry
+*.bak
+*.swp
