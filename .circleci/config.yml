@@ -12,32 +12,32 @@ jobs:
           name: run cfn-lint
           command: |
             cfn-lint -i W3002 -t cloudformation/*.yml
-  cfn-deploy:
-    executor: aws-cli/default
-    steps:
-      - checkout
-      - aws-cli/install
-      - aws-cli/setup:
-          role_arn: arn:aws:iam::713881797072:role/cfn-deploy-OIDC-role
-          region: ${AWS_REGION}
-      - run:
-          name: Show OIDC sub claim #debug
-          command: |
-            echo "Decode OIDC Token sub claim:"
-            echo "$CIRCLE_OIDC_TOKEN" | cut -d '.' -f2 | base64 -d 2>/dev/null | jq '.sub'
-      - run:
-          name: run cfn-deploy
-          command: |
-            aws cloudformation deploy --template-file ./cloudformation/1_VPC.yml --stack-name cfn-deploy-VPC --region ${AWS_REGION} --no-fail-on-empty-changeset
-            aws cloudformation deploy --template-file ./cloudformation/2_Sec.yml --stack-name cfn-deploy-Sec --region ${AWS_REGION}  --no-fail-on-empty-changeset 
-            aws cloudformation deploy --template-file ./cloudformation/3_S3.yml --stack-name cfn-deploy-S3 --region ${AWS_REGION}  --no-fail-on-empty-changeset 
-            aws cloudformation deploy --template-file ./cloudformation/4_IAM.yml --stack-name cfn-deploy-IAM --region ${AWS_REGION} --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM
-            aws cloudformation deploy --template-file ./cloudformation/5_EC2.yml --stack-name cfn-deploy-EC2 --region ${AWS_REGION} --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM
-            aws cloudformation deploy --template-file ./cloudformation/6_ALB.yml --stack-name cfn-deploy-ALB --region ${AWS_REGION} --no-fail-on-empty-changeset 
-            aws cloudformation deploy --template-file ./cloudformation/7_RDS.yml --stack-name cfn-deploy-RDS --region ${AWS_REGION} --no-fail-on-empty-changeset
+  #cfn-deploy:
+    #executor: aws-cli/default
+    #steps:
+      #- checkout
+      #- aws-cli/install
+      #- aws-cli/setup:
+          #role_arn: arn:aws:iam::713881797072:role/cfn-deploy-OIDC-role
+          #region: ${AWS_REGION}
+      #- run:
+          #name: Show OIDC sub claim #debug
+          #command: |
+            #echo "Decode OIDC Token sub claim:"
+            #echo "$CIRCLE_OIDC_TOKEN" | cut -d '.' -f2 | base64 -d 2>/dev/null | jq '.sub'
+      #- run:
+          #name: run cfn-deploy
+          #command: |
+            #aws cloudformation deploy --template-file ./cloudformation/1_VPC.yml --stack-name cfn-deploy-VPC --region ${AWS_REGION} --no-fail-on-empty-changeset
+            #aws cloudformation deploy --template-file ./cloudformation/2_Sec.yml --stack-name cfn-deploy-Sec --region ${AWS_REGION}  --no-fail-on-empty-changeset 
+            #aws cloudformation deploy --template-file ./cloudformation/3_S3.yml --stack-name cfn-deploy-S3 --region ${AWS_REGION}  --no-fail-on-empty-changeset 
+            #aws cloudformation deploy --template-file ./cloudformation/4_IAM.yml --stack-name cfn-deploy-IAM --region ${AWS_REGION} --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM
+            #aws cloudformation deploy --template-file ./cloudformation/5_EC2.yml --stack-name cfn-deploy-EC2 --region ${AWS_REGION} --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM
+            #aws cloudformation deploy --template-file ./cloudformation/6_ALB.yml --stack-name cfn-deploy-ALB --region ${AWS_REGION} --no-fail-on-empty-changeset 
+            #aws cloudformation deploy --template-file ./cloudformation/7_RDS.yml --stack-name cfn-deploy-RDS --region ${AWS_REGION} --no-fail-on-empty-changeset
 workflows:
   raisetech:
     jobs:
       - cfn-lint
-      - cfn-deploy:
-          context: AWS
+      #- cfn-deploy:
+          #context: AWS
