@@ -1,18 +1,24 @@
 - name: Initial setup
+  user: ec2-user
   hosts: all
-  become: true
   tasks: 
     - name: Change the timezone
       community.general.timezone:
         name: Asia/Tokyo
 
-    - name: Install package group
+    - name: Create a working directory
+      ansible.builtin.file:
+        path: ~/work
+        state: directory
+
+    - name: Install a package group
       become: true
       ansible.builtin.yum:
         name: '@Development tools'
         state: present
 
     - name: Install packages
+      become: true
       ansible.builtin.yum:
         name:
           - git
