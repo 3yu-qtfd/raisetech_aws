@@ -1,0 +1,44 @@
+---
+# tasks file for ruby and rbenv installation
+- name: Clone rbenv from GitHub
+  ansible.builtin.git:
+    repo: https://github.com/rbenv/rbenv.git
+    dest: /home/ec2-user/.rbenv
+
+- name: Set the rbenv path
+  ansible.builtin.blockinfile:
+    path: /home/ec2-user/.bashrc
+    block: |
+      # Set rbenv path and init rbenv
+      export PATH="$HOME/.rbenv/bin:$PATH"
+      eval "$(rbenv init -)"
+      # Remove duplicate entries from PATH
+      export PATH=$(echo "$PATH" | tr ':' '\n' | awk '!seen[$0]++' | paste -sd:)
+    state: present
+
+- name: Clone ruby-build plugin from GitHub
+  ansible.builtin.git:
+    repo: https://github.com/rbenv/ruby-build.git
+    dest: /home/ec2-user/.rbenv/plugins/ruby-build
+
+- name: Check if ruby is installed
+  ansible.builtin.shell:
+    cmd: bash -lc "ruby -v | grep -oE 'ruby [0-9]+\.[0-9]+\.[0-9]+' | cut -f 2 -d ' '"
+  args:
+    executable: /bin/bash
+  register: ruby_install_check
+  changed_when: false
+
+- name: Install ruby 3.2.3 with rbenv
+  ansible.builtin.shell:
+    cmd: bash -lc "rbenv install {{ ruby_version }}"
+  args:
+    executable: /bin/bash
+  when: ruby_install_check.stdout != ruby_version
+
+- name: Set the ruby version
+  ansible.builtin.shell:
+    cmd: bash -lc "rbenv global {{ ruby_version }}"
+  args:
+    executable: /bin/bash
+  when: ruby_install_check.stdout != ruby_version

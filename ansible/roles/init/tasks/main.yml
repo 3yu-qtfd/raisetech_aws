@@ -6,7 +6,7 @@
 
 - name: Create a working directory
   ansible.builtin.file:
-    path: /home/ec2-user/work
+    path: "{{ working_dir }}"
     state: directory
 
 - name: Install a package group
@@ -24,6 +24,7 @@
       - bzip2
       - curl
       - glibc-devel
+      - libyaml-devel
       - libffi-devel
       - readline-devel
       - zlib-devel

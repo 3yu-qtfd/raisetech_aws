@@ -3,3 +3,6 @@
   roles:
     - init
     - mysql
+    - ruby
+  vars:
+    working_dir: /home/ec2-user/work

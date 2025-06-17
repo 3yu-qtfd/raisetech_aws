@@ -8,14 +8,15 @@
 
 - name: Download mysql-community repository
   ansible.builtin.command:
-    chdir: /home/ec2-user/work
+    chdir: "{{ working_dir }}"
     cmd: wget https://dev.mysql.com/get/mysql84-community-release-el7-1.noarch.rpm
-    creates: ~/work/mysql84-community-release-el7-1.noarch.rpm"
+    creates: "{{ working_dir }}/mysql84-community-release-el7-1.noarch.rpm"
+  changed_when: false
 
 - name: Install mysql-community repository
   become: true
   ansible.builtin.yum:
-    name: "/home/ec2-user/work/mysql84-community-release-el7-1.noarch.rpm"
+    name: "{{ working_dir }}/mysql84-community-release-el7-1.noarch.rpm"
     state: present
 
 - name: Install mysql-community-client
